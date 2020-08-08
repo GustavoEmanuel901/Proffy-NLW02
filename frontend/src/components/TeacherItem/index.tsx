@@ -2,35 +2,53 @@ import React from 'react'
 
 import WhatsAppIcon from '../../assets/images/icons/whatsapp.svg'
 
+import api from '../../services/api'
+
 import './styles.css'
 
-function TeacherItem() {
+export interface Teacher {
+    id: number
+    avatar: string
+    bio: string
+    cost: number
+    name: string
+    subject: string
+    whatsapp: string
+}
+
+interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem:React.FC<TeacherItemProps> = ({ teacher }) => {
+    
+    function createNewConnection(){
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+    
     return (
         <article className="teacher-item">
         <header>
-            <img src="https://scontent.fbfh4-1.fna.fbcdn.net/v/t1.0-9/103665745_2549761711912434_660593237341138222_o.jpg?_nc_cat=106&_nc_sid=09cbfe&_nc_ohc=t84fSySc05AAX9c11PD&_nc_ht=scontent.fbfh4-1.fna&oh=c54fbfd14443770f98023ba2b32e64ec&oe=5F51BE59" alt="Perfil"/>
+            <img src={teacher.avatar} alt={teacher.name}/>
             <div>
-                <strong>Lusdete Cavalcante</strong>
-                <span>Português</span>
+                <strong>{teacher.name}</strong>
+                <span>{teacher.subject}</span>
             </div>
         </header>
 
-        <p>
-            Entusiasta das melhores tecnologias de química avançada 
-            <br/>
-            
-            Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.
-        </p> 
+        <p>{teacher.bio}</p> 
 
         <footer>
             <p>
                 Preço/hora
-                <strong>R$ 80,00</strong>
+                <strong>{`R$ ${teacher.cost}`}</strong>
             </p>
-            <button>
+            <a target='_blank' onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
                 <img src={WhatsAppIcon} alt="Whatsapp"/>
                 Entrar em Contato
-            </button>
+            </a>
         </footer>
     </article>
     )
